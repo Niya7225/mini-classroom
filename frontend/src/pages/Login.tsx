@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import api from "../api/axios";
+import { AuthContext } from "../context/AuthContext";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const auth = useContext(AuthContext);
+    const navigate = useNavigate();
 
-    function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
 
-        const loginData = {
-            email,
-            password
-        };
+        const response = await api.post("/auth/login", { email, password });
 
-        console.log(loginData);
+        auth?.login(response.data.access_token);
+        navigate("/dashboard");
     }
 
     return (
