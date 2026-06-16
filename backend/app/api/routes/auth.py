@@ -6,7 +6,7 @@ from app.db.database import get_db
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse
 from app.schemas.auth import LoginRequest, TokenResponse
-
+from app.api.deps import get_current_user
 router = APIRouter(
     prefix="/auth",
     tags=["Auth"],
@@ -78,3 +78,7 @@ def login_user(data: LoginRequest, db: Session = Depends(get_db)):
         "access_token": token,
         "token_type": "bearer"
     }
+
+@router.get("/me", response_model=UserResponse)
+def get_me(current_user: User = Depends(get_current_user)):
+    return current_user
