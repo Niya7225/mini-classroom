@@ -13,20 +13,6 @@
 | Day 9 | Deployment | Deploy backend to Render, connect Supabase PostgreSQL, configure CORS/env | Deploy frontend to Vercel, configure API base URL/env | Production deployment, environment variables |
 | Day 10 | Final QA + docs | Write backend/deployment README, review frontend deployment | Write frontend/user-flow README, review backend deployment | Final polish, teamwork, PR review |
 
-Technical Requirements Document (TRD)
 
-CONCURENT UDP
-
-TCP
-
-SLIDING WINDOW 
-
-ALGORITHM
-
-Student Planner
-
-Welcome to Notion
-
-To Do List
 
 Class Notes
