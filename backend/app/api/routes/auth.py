@@ -7,6 +7,7 @@ from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse
 from app.schemas.auth import LoginRequest, TokenResponse
 from app.api.deps import get_current_user
+
 router = APIRouter(
     prefix="/auth",
     tags=["Auth"],
