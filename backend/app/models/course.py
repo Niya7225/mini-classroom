@@ -23,3 +23,7 @@ class Course(Base):
         "User",
         back_populates="courses"
     )
+    enrollments = relationship(
+    "Enrollment",
+    back_populates="course"
+)

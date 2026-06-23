@@ -20,3 +20,8 @@ class User(Base):
         "Course",
         back_populates="teacher"
     )    
+    enrollments = relationship(
+    "Enrollment",
+    back_populates="student",
+    foreign_keys="Enrollment.student_id"
+)
