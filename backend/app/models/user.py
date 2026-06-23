@@ -1,5 +1,6 @@
 from sqlalchemy import Column, DateTime, Integer, String
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from app.db.database import Base
 
@@ -15,3 +16,7 @@ class User(Base):
     role = Column(String(20), nullable=False)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    courses = relationship(
+        "Course",
+        back_populates="teacher"
+    )    
