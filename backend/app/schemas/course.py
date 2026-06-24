@@ -5,6 +5,9 @@ class CourseCreate(BaseModel):
     title: str
     description: str | None = None
 
+class CourseUpdate(BaseModel):
+    title: str
+    description: str
 
 class CourseResponse(BaseModel):
     id: int
