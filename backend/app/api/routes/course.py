@@ -25,6 +25,29 @@ def get_courses(
     return courses
 
 @router.get(
+    "/my-teaching",
+    response_model=list[CourseResponse]
+)
+def get_my_courses(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    if current_user.role != "teacher":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only teachers can view teaching courses"
+        )
+
+
+    courses = db.query(Course).filter(
+        Course.teacher_id == current_user.id
+    ).all()
+
+
+    return courses
+
+@router.get(
     "/{course_id}",
     response_model=CourseResponse
 )
@@ -77,25 +100,4 @@ def create_course(
 
     return new_course
 
-@router.get(
-    "/my-teaching",
-    response_model=list[CourseResponse]
-)
-def get_my_courses(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
 
-    if current_user.role != "teacher":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only teachers can view teaching courses"
-        )
-
-
-    courses = db.query(Course).filter(
-        Course.teacher_id == current_user.id
-    ).all()
-
-
-    return courses
