@@ -6,7 +6,7 @@ from app.db.database import get_db
 from app.models.course import Course
 from app.models.enrollment import Enrollment
 from app.models.user import User
-from app.schemas.course import CourseCreate, CourseResponse
+from app.schemas.course import CourseCreate, CourseResponse, CourseUpdate
 from app.schemas.enrollment import EnrollmentResponse
 
 
@@ -99,4 +99,66 @@ def create_course(
 
     return new_course
 
+@router.put(
+    "/{course_id}",
+    response_model=CourseResponse
+)
+def update_course(
+    course_id: int,
+    course_data: CourseUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
 
+    course = db.query(Course).filter(
+        Course.id == course_id
+    ).first()
+
+    if not course:
+        raise HTTPException(
+            status_code=404,
+            detail="Course not found"
+        )
+
+    if course.teacher_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You cannot edit this course"
+        )
+
+    course.title = course_data.title
+    course.description = course_data.description
+
+    db.commit()
+    db.refresh(course)
+
+    return course
+@router.delete("/{course_id}")
+def delete_course(
+    course_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    course = db.query(Course).filter(
+        Course.id == course_id
+    ).first()
+
+    if not course:
+        raise HTTPException(
+            status_code=404,
+            detail="Course not found"
+        )
+
+    if course.teacher_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You cannot delete this course"
+        )
+
+    db.delete(course)
+    db.commit()
+
+    return {
+        "message": "Course deleted successfully"
+    }
