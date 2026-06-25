@@ -4,14 +4,18 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_current_user
 from app.db.database import get_db
 from app.models.course import Course
+from app.models.enrollment import Enrollment
 from app.models.user import User
 from app.schemas.course import CourseCreate, CourseResponse, CourseUpdate
+from app.schemas.course import CourseCreate, CourseResponse
+from app.schemas.enrollment import EnrollmentResponse
 
 
 router = APIRouter(
     prefix="/courses",
     tags=["Courses"]
 )
+
 
 @router.get(
     "",
@@ -67,7 +71,6 @@ def get_course(
             detail="Course not found"
         )
 
-    return course
 @router.post(
     "",
     response_model=CourseResponse,
@@ -85,18 +88,15 @@ def create_course(
             detail="Only teachers can create courses"
         )
 
-
     new_course = Course(
         title=course_data.title,
         description=course_data.description,
         teacher_id=current_user.id
     )
 
-
     db.add(new_course)
     db.commit()
     db.refresh(new_course)
-
 
     return new_course
 
