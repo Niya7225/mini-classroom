@@ -48,3 +48,43 @@ export const deleteCourse = (id: number) => {
         }
     });
 };
+export const getAllCourses = () => {
+    return api.get("/courses");
+};
+
+export const getMyEnrollments = () => {
+    const token = localStorage.getItem("token");
+
+    return api.get("/courses/my-enrollments", {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+export const enrollCourse = (courseId: number) => {
+    const token = localStorage.getItem("token");
+
+    return api.post(
+        `/courses/${courseId}/enroll`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+};
+
+export const unenrollCourse = (courseId: number) => {
+    const token = localStorage.getItem("token");
+
+    return api.delete(
+        `/courses/${courseId}/enroll`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+};

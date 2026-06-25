@@ -5,7 +5,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import { Navigate } from "react-router-dom";
 
 function App() {
 
@@ -35,7 +35,10 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/"
+          element={<Navigate to="/login" />}
+        />
 
       </Routes>
 
