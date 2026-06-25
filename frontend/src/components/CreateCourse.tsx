@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createCourse } from "../api/course";
+import { createCourse } from "../api/courses";
 
 interface Props {
     onCourseCreated: () => void;

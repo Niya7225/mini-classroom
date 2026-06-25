@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import CreateCourse from "../components/CreateCourse";
 import MyCourses from "../components/MyCourses";
-
+import StudentCourses from "../components/StudentCourses";
 function Dashboard() {
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
@@ -72,9 +72,7 @@ function Dashboard() {
                     )}
                 </div>
             ) : (
-                <h2 className="mt-8 text-xl">
-                    Logged in as student
-                </h2>
+                <StudentCourses />
             )}
         </div>
     );
