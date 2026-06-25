@@ -7,7 +7,6 @@ from app.models.course import Course
 from app.models.enrollment import Enrollment
 from app.models.user import User
 from app.schemas.course import CourseCreate, CourseResponse, CourseUpdate
-from app.schemas.course import CourseCreate, CourseResponse
 from app.schemas.enrollment import EnrollmentResponse
 
 
