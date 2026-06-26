@@ -24,4 +24,8 @@ class User(Base):
     "Enrollment",
     back_populates="student",
     foreign_keys="Enrollment.student_id"
-)
+    )
+    submissions = relationship(
+        "Submission",
+        back_populates="student"
+    )

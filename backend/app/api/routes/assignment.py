@@ -56,3 +56,27 @@ def create_assignment(
   db.refresh(new_assignment)
   return new_assignment
     
+@router.get(
+    "/{course_id}/assignments",
+    response_model=list[AssignmentResponse]
+)
+def get_course_assignments(
+    course_id: int,
+    db: Session = Depends(get_db)
+):
+
+    course = db.query(Course).filter(
+        Course.id == course_id
+    ).first()
+
+    if not course:
+        raise HTTPException(
+            status_code=404,
+            detail="Course not found"
+        )
+
+    assignments = db.query(Assignment).filter(
+        Assignment.course_id == course_id
+    ).all()
+
+    return assignments
