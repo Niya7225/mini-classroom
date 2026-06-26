@@ -29,3 +29,8 @@ class Assignment(Base):
         "Course",
         back_populates="assignments"
     )
+
+    submissions = relationship(
+    "Submission",
+    back_populates="assignment"
+)
