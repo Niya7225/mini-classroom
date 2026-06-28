@@ -104,3 +104,37 @@ def get_my_submissions(
     ).all()
 
     return submissions
+
+@router.get(
+    "/assignments/{assignment_id}/submissions",
+    response_model=list[SubmissionResponse]
+)
+def get_assignment_submissions(
+    assignment_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    if current_user.role != "teacher":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only teachers can view submissions"
+        )
+    assignment = db.query(Assignment).filter(
+        Assignment.id == assignment_id
+    ).first()
+
+    if not assignment:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Assignment not found"
+        )
+    if assignment.course.teacher_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You cannot view submissions for this assignment"
+        )
+    submissions = db.query(Submission).filter(
+        Submission.assignment_id == assignment_id
+    ).all()
+
+    return submissions
