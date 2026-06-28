@@ -9,6 +9,7 @@ from app.api.routes.course import router as course_router
 from app.api.routes.assignment import router as assignment_router
 from app.db.database import Base, engine
 from app.api.routes import assignment_details
+from app.api.routes import submission
 
 app = FastAPI(title="Mini Classroom API")
 app.add_middleware(
@@ -24,3 +25,4 @@ app.include_router(auth_router)
 app.include_router(course_router)
 app.include_router(assignment_router)
 app.include_router(assignment_details.router)
+app.include_router(submission.router)
