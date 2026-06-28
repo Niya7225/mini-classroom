@@ -88,3 +88,11 @@ export const unenrollCourse = (courseId: number) => {
         }
     );
 };
+
+export async function getCourseAssignments(courseId: number) {
+    const response = await api.get(
+        `/courses/${courseId}/assignments`
+    );
+
+    return response.data;
+};

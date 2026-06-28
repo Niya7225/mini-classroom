@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, Text, DateTime
+from sqlalchemy import Column, Integer, Float, ForeignKey, Text, DateTime
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
@@ -26,6 +26,10 @@ class Submission(Base):
         Text,
         nullable=False
     )
+    grade = Column(
+        Float,
+        nullable=True
+    )    
 
     submitted_at = Column(
         DateTime(timezone=True),
