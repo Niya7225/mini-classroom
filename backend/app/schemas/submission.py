@@ -12,7 +12,11 @@ class SubmissionResponse(BaseModel):
     assignment_id: int
     student_id: int
     content: str
+    grade: float | None
     submitted_at: datetime
 
     class Config:
         from_attributes = True
+
+class SubmissionGrade(BaseModel):
+    grade: float
