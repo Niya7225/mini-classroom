@@ -4,6 +4,8 @@ import { AuthContext } from "../context/AuthContext";
 import CreateCourse from "../components/CreateCourse";
 import MyCourses from "../components/MyCourses";
 import StudentCourses from "../components/StudentCourses";
+import StudentAssignments from "../components/StudentAssignments";
+
 function Dashboard() {
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
@@ -72,8 +74,30 @@ function Dashboard() {
                     )}
                 </div>
             ) : (
-                <StudentCourses />
-            )}
+            <div className="mt-8">
+                <button
+                    onClick={() => toggleSection("browse")}
+                    className="bg-blue-500 text-white px-4 py-2 rounded mr-3"
+                >
+                    Browse Courses
+                </button>
+
+                <button
+                    onClick={() => toggleSection("assignments")}
+                    className="bg-green-500 text-white px-4 py-2 rounded"
+                >
+                    My Assignments
+                </button>
+
+                {activeSection === "browse" && (
+                    <StudentCourses />
+                )}
+
+                {activeSection === "assignments" && (
+                    <StudentAssignments />
+                )}
+            </div>
+        )}
         </div>
     );
 }

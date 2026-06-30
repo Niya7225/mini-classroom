@@ -33,3 +33,39 @@ export async function gradeSubmission(
 
     return response.data;
 }
+
+export async function submitAssignment(
+    assignmentId: number,
+    content: string
+) {
+    const token = localStorage.getItem("token");
+
+    const response = await api.post(
+        `/assignments/${assignmentId}/submit`,
+        {
+            content
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    return response.data;
+}
+
+export async function getMySubmissions() {
+    const token = localStorage.getItem("token");
+
+    const response = await api.get(
+        "/submissions/me",
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    return response.data;
+}
