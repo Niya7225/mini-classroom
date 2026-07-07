@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import CreateCourse from "../components/CreateCourse";
 import MyCourses from "../components/MyCourses";
-import StudentCourses from "../components/StudentCourses";
-import StudentAssignments from "../components/StudentAssignments";
+import StudentLayout from "../components/StudentLayout";
 
 function Dashboard() {
     const auth = useContext(AuthContext);
@@ -24,7 +23,7 @@ function Dashboard() {
         );
     }
 
-    return (
+     return (
         <div className="p-8">
             <div className="border p-8 rounded-xl shadow">
                 <h1 className="text-2xl font-bold">
@@ -50,54 +49,44 @@ function Dashboard() {
             {auth?.user?.role === "teacher" ? (
                 <div className="mt-8">
                     <button
-                        onClick={() => toggleSection("create")}
+                        onClick={() =>
+                            toggleSection("create")
+                        }
                         className="bg-blue-500 text-white px-4 py-2 rounded mr-3"
                     >
                         Create Course
                     </button>
 
                     <button
-                        onClick={() => toggleSection("courses")}
+                        onClick={() =>
+                            toggleSection("courses")
+                        }
                         className="bg-green-500 text-white px-4 py-2 rounded"
                     >
                         My Courses
                     </button>
 
-                    {activeSection === "create" && (
+                    {activeSection ===
+                        "create" && (
                         <CreateCourse
-                            onCourseCreated={() => setRefresh(refresh + 1)}
+                            onCourseCreated={() =>
+                                setRefresh(
+                                    refresh + 1
+                                )
+                            }
                         />
                     )}
 
-                    {activeSection === "courses" && (
-                        <MyCourses refresh={refresh} />
+                    {activeSection ===
+                        "courses" && (
+                        <MyCourses
+                            refresh={refresh}
+                        />
                     )}
                 </div>
             ) : (
-            <div className="mt-8">
-                <button
-                    onClick={() => toggleSection("browse")}
-                    className="bg-blue-500 text-white px-4 py-2 rounded mr-3"
-                >
-                    Browse Courses
-                </button>
-
-                <button
-                    onClick={() => toggleSection("assignments")}
-                    className="bg-green-500 text-white px-4 py-2 rounded"
-                >
-                    My Assignments
-                </button>
-
-                {activeSection === "browse" && (
-                    <StudentCourses />
-                )}
-
-                {activeSection === "assignments" && (
-                    <StudentAssignments />
-                )}
-            </div>
-        )}
+                <StudentLayout />
+            )}
         </div>
     );
 }

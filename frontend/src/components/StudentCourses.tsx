@@ -11,84 +11,171 @@ interface Course {
     id: number;
     title: string;
     description: string;
+    teacher?: {
+        id: number;
+        name: string;
+    };
 }
 
 function StudentCourses() {
     const [courses, setCourses] = useState<Course[]>([]);
-    const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
+    const [enrolledCourses, setEnrolledCourses] =
+        useState<Course[]>([]);
 
     useEffect(() => {
         loadData();
     }, []);
 
     async function loadData() {
-        const allCourses = await getAllCourses();
-        const myCourses = await getMyEnrollments();
+        try {
+            const allCourses =
+                await getAllCourses();
 
-        setCourses(allCourses.data);
-        setEnrolledCourses(myCourses.data);
+            const myCourses =
+                await getMyEnrollments();
+
+            setCourses(allCourses.data);
+            setEnrolledCourses(myCourses.data);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async function handleEnroll(id: number) {
-        await enrollCourse(id);
-        loadData();
+        try {
+            await enrollCourse(id);
+            loadData();
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async function handleUnenroll(id: number) {
-        await unenrollCourse(id);
-        loadData();
+        try {
+            await unenrollCourse(id);
+            loadData();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function isEnrolled(courseId: number) {
+        return enrolledCourses.some(
+            (course) => course.id === courseId
+        );
     }
 
     return (
-        <div className="p-6">
-
-            <h2 className="text-2xl font-bold mb-4">
+        <div>
+            <h1 className="text-3xl font-bold mb-8">
                 Browse Courses
-            </h2>
+            </h1>
 
-            {courses.map((course) => (
-                <div
-                    key={course.id}
-                    className="border rounded p-4 mb-3"
-                >
-                    <h3 className="font-bold">
-                        {course.title}
-                    </h3>
-
-                    <p>{course.description}</p>
-
-                    <button
-                        onClick={() => handleEnroll(course.id)}
-                        className="bg-blue-500 text-white px-3 py-1 rounded mt-2"
+            <div className="grid md:grid-cols-2 gap-6">
+                {courses.map((course) => (
+                    <div
+                        key={course.id}
+                        className="bg-white rounded-xl shadow p-6 border"
                     >
-                        Enroll
-                    </button>
-                </div>
-            ))}
+                        <h2 className="text-xl font-bold">
+                            {course.title}
+                        </h2>
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">
+                        <p className="text-gray-600 mt-2">
+                            {course.description}
+                        </p>
+
+                        {course.teacher && (
+                            <p className="mt-3 text-sm text-gray-500">
+                                Teacher:
+                                {" "}
+                                {course.teacher.name}
+                            </p>
+                        )}
+
+                        {isEnrolled(course.id) ? (
+                            <button
+                                onClick={() =>
+                                    handleUnenroll(
+                                        course.id
+                                    )
+                                }
+                                className="mt-5 bg-red-500 text-white px-4 py-2 rounded"
+                            >
+                                Unenroll
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() =>
+                                    handleEnroll(
+                                        course.id
+                                    )
+                                }
+                                className="mt-5 bg-blue-500 text-white px-4 py-2 rounded"
+                            >
+                                Enroll
+                            </button>
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            <h1 className="text-3xl font-bold mt-12 mb-8">
                 My Enrolled Courses
-            </h2>
+            </h1>
 
-            {enrolledCourses.map((course) => (
-                <div
-                    key={course.id}
-                    className="border rounded p-4 mb-3"
-                >
-                    <h3 className="font-bold">
-                        {course.title}
-                    </h3>
+            {enrolledCourses.length === 0 ? (
+                <p>
+                    You are not enrolled in any
+                    course.
+                </p>
+            ) : (
+                <div className="grid md:grid-cols-2 gap-6">
+                    {enrolledCourses.map(
+                        (course) => (
+                            <div
+                                key={course.id}
+                                className="bg-white rounded-xl shadow p-6 border"
+                            >
+                                <h2 className="text-xl font-bold">
+                                    {
+                                        course.title
+                                    }
+                                </h2>
 
-                    <p>{course.description}</p>
+                                <p className="text-gray-600 mt-2">
+                                    {
+                                        course.description
+                                    }
+                                </p>
 
-                    <button
-                        onClick={() => handleUnenroll(course.id)}
-                        className="bg-red-500 text-white px-3 py-1 rounded mt-2"
-                    >
-                        Unenroll
-                    </button>
+                                {course.teacher && (
+                                    <p className="mt-3 text-sm text-gray-500">
+                                        Teacher:
+                                        {" "}
+                                        {
+                                            course
+                                                .teacher
+                                                .name
+                                        }
+                                    </p>
+                                )}
+
+                                <button
+                                    onClick={() =>
+                                        handleUnenroll(
+                                            course.id
+                                        )
+                                    }
+                                    className="mt-5 bg-red-500 text-white px-4 py-2 rounded"
+                                >
+                                    Unenroll
+                                </button>
+                            </div>
+                        )
+                    )}
                 </div>
-            ))}
+            )}
         </div>
     );
 }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+
 import { getMyEnrollments } from "../api/courses";
 import { getCourseAssignments } from "../api/assignment";
+
 import SubmissionForm from "./SubmissionForm";
 
 interface Course {
@@ -17,8 +19,12 @@ interface Assignment {
 }
 
 function StudentAssignments() {
-    const [courses, setCourses] = useState<Course[]>([]);
-    const [assignments, setAssignments] = useState<Assignment[]>([]);
+    const [courses, setCourses] =
+        useState<Course[]>([]);
+
+    const [assignments, setAssignments] =
+        useState<Assignment[]>([]);
+
     const [selectedCourse, setSelectedCourse] =
         useState<number | null>(null);
 
@@ -28,17 +34,23 @@ function StudentAssignments() {
 
     async function loadCourses() {
         try {
-            const response = await getMyEnrollments();
+            const response =
+                await getMyEnrollments();
+
             setCourses(response.data);
         } catch (error) {
             console.error(error);
         }
     }
 
-    async function loadAssignments(courseId: number) {
+    async function loadAssignments(
+        courseId: number
+    ) {
         try {
             const response =
-                await getCourseAssignments(courseId);
+                await getCourseAssignments(
+                    courseId
+                );
 
             setAssignments(response.data);
             setSelectedCourse(courseId);
@@ -48,24 +60,22 @@ function StudentAssignments() {
     }
 
     return (
-        <div className="mt-8">
-            <h2 className="text-2xl font-bold mb-5">
-                My Courses
-            </h2>
+        <div>
+            <h1 className="text-3xl font-bold mb-8">
+                Assignments
+            </h1>
 
-            {courses.length === 0 ? (
-                <p>No enrolled courses.</p>
-            ) : (
-                courses.map((course) => (
+            <div className="grid md:grid-cols-2 gap-6">
+                {courses.map((course) => (
                     <div
                         key={course.id}
-                        className="border rounded p-4 mb-3"
+                        className="bg-white rounded-xl shadow p-6 border"
                     >
-                        <h3 className="font-bold">
+                        <h2 className="text-xl font-bold">
                             {course.title}
-                        </h3>
+                        </h2>
 
-                        <p>
+                        <p className="text-gray-600 mt-2">
                             {course.description}
                         </p>
 
@@ -75,55 +85,69 @@ function StudentAssignments() {
                                     course.id
                                 )
                             }
-                            className="bg-blue-500 text-white px-3 py-1 rounded mt-2"
+                            className="mt-5 bg-blue-500 text-white px-4 py-2 rounded"
                         >
                             View Assignments
                         </button>
                     </div>
-                ))
-            )}
+                ))}
+            </div>
 
             {selectedCourse && (
-                <div className="mt-8">
-                    <h2 className="text-2xl font-bold mb-4">
-                        Assignments
+                <div className="mt-12">
+                    <h2 className="text-3xl font-bold mb-6">
+                        Course Assignments
                     </h2>
 
-                    {assignments.length === 0 ? (
+                    {assignments.length ===
+                    0 ? (
                         <p>
-                            No assignments for this
-                            course.
+                            No assignments
+                            available.
                         </p>
                     ) : (
-                        assignments.map(
-                            (assignment) => (
-                                <div
-                                    key={assignment.id}
-                                    className="border rounded p-4 mb-4"
-                                >
-                                    <h3 className="font-bold">
-                                        {assignment.title}
-                                    </h3>
-
-                                    <p>
-                                        {assignment.description}
-                                    </p>
-
-                                    <p className="mt-2 text-sm">
-                                        Due:{" "}
-                                        {new Date(
-                                            assignment.due_date
-                                        ).toLocaleString()}
-                                    </p>
-
-                                    <SubmissionForm
-                                        assignmentId={
+                        <div className="space-y-6">
+                            {assignments.map(
+                                (
+                                    assignment
+                                ) => (
+                                    <div
+                                        key={
                                             assignment.id
                                         }
-                                    />
-                                </div>
-                            )
-                        )
+                                        className="bg-white rounded-xl shadow p-6 border"
+                                    >
+                                        <h3 className="text-xl font-bold">
+                                            {
+                                                assignment.title
+                                            }
+                                        </h3>
+
+                                        <p className="mt-2 text-gray-600">
+                                            {
+                                                assignment.description
+                                            }
+                                        </p>
+
+                                        <p className="mt-3 text-sm text-red-500">
+                                            Due:
+                                            {" "}
+                                            {new Date(
+                                                assignment.due_date
+                                            ).toLocaleString()}
+                                        </p>
+
+                                        <div className="mt-5">
+                                            <SubmissionForm
+                                                assignmentId={
+                                                    assignment.id
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                )
+                            )}
+                        </div>
                     )}
                 </div>
             )}
